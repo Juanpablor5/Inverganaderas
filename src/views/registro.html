@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel='stylesheet' href="https://fonts.googleapis.com/css2?family=Questrial">
+        <title>Nuevo registro</title>
+        <link rel="stylesheet" href="../utils/bootstrap/css/bootstrap.css">
+        <link rel="stylesheet" href="../assets/css/style.css">
+        <link href="../assets/img/icon.ico" rel="icon">
+
+        <!-- Insert this line above script imports  -->
+        <script>if (typeof module === 'object') {
+                window.module = module;
+                module = undefined;
+            } 
+        </script>
+        <script src="../utils/jQuery/jquery-3.5.1.js"></script>
+        <script>if (window.module) module = window.module;</script>
+    </head>
+
+    <body class="intro bg-image" style="background-image: url(../assets/img/bg-registro.jpg); overflow: hidden;">
+
+        <div class="container" id="btn_registro" style="display: block;">
+            <div class="center-content">
+                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="btn-group btn-group-md mr-2" role="group" aria-label="First group">
+                        <button type="button" id="btn_parto" class="btn btn-secondary">&nbsp;Nuevo parto&nbsp;</button>
+                    </div>
+                    <div class="btn-group btn-group-md mr-2" role="group" aria-label="Second group">
+                        <button type="button" id="btn_hembra" class="btn btn-secondary">Nueva hembra</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            $("#btn_hembra").click(function () {
+                document.getElementById("btn_registro").style.display = "none";
+                document.getElementById("form_hembra").style.display = "block";
+            });
+        </script>
+
+        <div id="form_parto" class="form-parto">
+            <form style="color: black;">
+                <div class="form-group">
+                    <label for="hembras">Seleccionar número de registro de la madre</label>
+                    <select id="hembras" class="font"></select>
+                    <script>
+                        var hembras_select
+                    </script>
+                    <script src="../utils/lib/slimselect.js"></script>
+                </div>
+                <div class="form-group">
+                    <label for="genero">Seleccionar género de la cría</label>
+                    <select id="genero" class="font">
+                        <option data-placeholder="true"></option>
+                        <option value="Hembra">Hembra</option>
+                        <option value="Macho">Macho</option>
+                    </select>
+                    <script src="../utils/lib/slimselect.js"></script>
+                    <script>
+                        var genero_select = new SlimSelect({
+                            select: "#genero",
+                            placeholder: "Género",
+                            showSearch: false, // shows search field,
+                            closeOnSelect: true
+                        });
+                        $("#genero").change(function () {
+                            if (genero_select.selected() == "Hembra") {
+                                document.getElementById("group_registro").style.display = "block";
+                            } else {
+                                document.getElementById("group_registro").style.display = "none";
+                            }
+                        });                        
+                    </script>
+                </div>
+                <div class="form-group" id="group_registro" style="display: none">
+                    <label for="input_reg_parto">Número de registro</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">H-</div>
+                        </div>
+                        <input type="number" class="form-control" id="input_reg_parto" placeholder="Número de registro"
+                            oninput="maxLengthCheck(this)" maxlength="3" min="1" max="999">
+                    </div>
+                    <div class="form-group form-check" style="margin-top: 10px;">
+                        <input type="checkbox" class="form-check-input" id="check_registro">
+                        <label class="form-check-label" for="check_registro">Sin número de registro por ahora</label>
+                    </div>
+                    <script>
+                        function maxLengthCheck(object) {
+                            if (object.value.length > object.maxLength)
+                                object.value = object.value.slice(0, object.maxLength)
+                        }
+                        $('#check_registro').change(function () {
+                            if ($('#check_registro').is(':checked') == true) {
+                                $('#input_reg_parto').val('999').prop('disabled', true);
+                            } else {
+                                $('#input_reg_parto').prop('disabled', false);
+                            }
+                        });
+                    </script>
+                </div>
+                <div class="form-group">
+                    <label for="fecha-parto">Fecha de parto</label>
+                    <input class="form-control" type="date" value="dd/mm/aaaa" id="fecha-parto">
+                </div>
+                <button id="btn_reg_parto" class="btn btn-secondary" style="margin-left:33%">Registrar parto</button>
+            </form>
+        </div>
+
+        <div id="form_hembra" class="form-hembra" style="margin-top:20%">
+            <form style="color: black;">
+                <div class="form-group">
+                    <label for="input_reg_hembra">Número de registro</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">H-</div>
+                        </div>
+                        <input type="number" class="form-control" id="input_reg_hembra" placeholder="Número de registro"
+                            oninput="maxLengthCheck(this)" maxlength="3" min="1" max="999">
+                    </div>
+                    <script>
+                        function maxLengthCheck(object) {
+                            if (object.value.length > object.maxLength)
+                                object.value = object.value.slice(0, object.maxLength)
+                        }
+                    </script>
+                </div>
+                <div class="form-group">
+                    <label for="input_descripcion">Descripción</label>
+                    <input type="text" class="form-control" id="input_descripcion"
+                        placeholder="Descripción de la hembra">
+                </div>
+                <button id="btn_reg_hembra" class="btn btn-secondary" style="margin-left:33%">Registrar
+                    hembra</button>
+            </form>
+        </div>
+
+        <script src="../js/registro.js"></script>
+
+
+        <!-- Insert this line above script imports  -->
+        <script>
+            if (typeof module === 'object') {
+                window.module = module;
+                module = undefined;
+            } 
+        </script>
+
+        <!-- normal script imports etc  -->
+        <script src="../utils/jQuery/jquery-3.5.1.js"></script>
+        <script src="../utils/popper/popper.min.js"></script>
+        <script src="../utils/bootstrap/js/bootstrap.js"></script>
+
+        <!-- Insert this line after script imports -->
+        <script>if (window.module) module = window.module;</script>
+
+    </body>
+
+</html>

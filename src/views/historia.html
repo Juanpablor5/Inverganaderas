@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel='stylesheet' href="https://fonts.googleapis.com/css2?family=Questrial">
+        <title>Historia individual</title>
+        <link rel="stylesheet" href="../utils/bootstrap/css/bootstrap.css">
+        <link rel="stylesheet" href="../assets/css/style.css">
+        <link href="../assets/img/icon.ico" rel="icon">
+
+        <!-- Insert this line above script imports  -->
+        <script>if (typeof module === 'object') {
+                window.module = module;
+                module = undefined;
+            } 
+        </script>
+        <script src="../utils/jQuery/jquery-3.5.1.js"></script>
+        <script>if (window.module) module = window.module;</script>
+
+    </head>
+
+    <body class="intro bg-image" style="background-image: url(../assets/img/bg-historia.jpg);">
+
+        <div style="height: 50px;"></div>
+
+        <div class="container" style="background-color: rgb(255, 255, 255, 0.8); height: 200px;">
+            <p class="titles" style="text-align: center; color: black;">Historia individual</p>
+            <div class="row" style="margin-left: 20%;">
+                <div class="col-md-8">
+                    <h5 style="color: black; ">Buscar la hembra por el número de registro:</h5>
+                </div>
+            </div>
+            <div class="row" style="margin-left: 20%;">
+                <div class="col-md-8">
+                    <select id="hembras_historia" class="font"></select>
+                    <script src="../utils/lib/slimselect.js"></script>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-primary" id="btn_historia">Buscar</button>
+                </div>
+            </div>
+        </div>
+
+        <div style="height: 50px;"></div>
+
+        <div id="tabla_historia"></div>
+
+        <script src="../js/historia.js"></script>
+
+        <!-- Insert this line above script imports  -->
+        <script>if (typeof module === 'object') {
+                window.module = module;
+                module = undefined;
+            } 
+        </script>
+
+        <!-- normal script imports etc  -->
+        <script src="../utils/popper/popper.min.js"></script>
+        <script src="../utils/bootstrap/js/bootstrap.js"></script>
+
+        <!-- Insert this line after script imports -->
+        <script>if (window.module) module = window.module;</script>
+
+    </body>
+
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel='stylesheet' href="https://fonts.googleapis.com/css2?family=Questrial">
+        <title>Listado consecutivo</title>
+        <link rel="stylesheet" href="../utils/bootstrap/css/bootstrap.css">
+        <link rel="stylesheet" href="../assets/css/style.css">
+        <link href="../assets/img/icon.ico" rel="icon">
+    </head>
+
+    <body class="intro bg-image" style="background-image: url(../assets/img/bg-listado.jpg);">
+        <head>
+            <h1 class="titles" style="text-align: center; color: black; margin-top: 20px;">Listado consecutivo de registros</h1>
+            <div id="tabla"></div>
+        </head>
+
+        
+        
+        <script src="../js/listado.js"></script>
+        <!-- Insert this line above script imports  -->
+        <script>if (typeof module === 'object') {
+                window.module = module;
+                module = undefined;
+            } 
+        </script>
+
+        <!-- normal script imports etc  -->
+        <script src="../utils/jQuery/jquery-3.5.1.js"></script>
+        <script src="../utils/popper/popper.min.js"></script>
+        <script src="../utils/bootstrap/js/bootstrap.js"></script>
+
+        <!-- Insert this line after script imports -->
+        <script>if (window.module) module = window.module;</script>
+
+    </body>
+
+</html>
