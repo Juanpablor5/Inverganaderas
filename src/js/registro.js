@@ -106,7 +106,8 @@ form_parto.addEventListener('submit', e => {
                             descripcion: "Nacida el " + fecha(),
                             vendido: "",
                             muerte: "",
-                            partos: []
+                            partos: [],
+                            madre: id_hembra
                         });
                         const hem_temp = hembras;
                         hembras = sortId(hem_temp);
@@ -114,6 +115,13 @@ form_parto.addEventListener('submit', e => {
                         let data_hembras = JSON.stringify(hembras);
 
                         fs.writeFileSync(path.join(__dirname, '../data/registros/Hembras.json'), data_hembras)
+
+                        if (id() != 999) {
+                            let dir_hem = path.join(__dirname, '../data/img_programa/H-' + id() + "-Nacida_el_" + fecha());
+                            if (!fs.existsSync(dir_hem)) {
+                                fs.mkdirSync(dir_hem);
+                            }
+                        }
 
                         ipcRenderer.send('registro:nuevo', nuevo_registro);
                         return

@@ -25,7 +25,7 @@
 
         <div style="height: 50px;"></div>
 
-        <div class="container" style="background-color: rgb(255, 255, 255, 0.8); height: 200px;">
+        <div class="container" style="background-color: rgb(255, 255, 255, 0.8); height: auto;">
             <p class="titles" style="text-align: center; color: black;">Historia individual</p>
             <div class="row" style="margin-left: 20%;">
                 <div class="col-md-8">
@@ -41,11 +41,34 @@
                     <button class="btn btn-primary" id="btn_historia">Buscar</button>
                 </div>
             </div>
+            <div style="height: 15px;"></div>
         </div>
 
         <div style="height: 50px;"></div>
 
         <div id="tabla_historia"></div>
+
+        <div id="edit_num_reg" class="form-parto" style="width:30%; margin-left: auto; margin-right: auto;">
+            <form style="color: black;">
+                <div class="form-group" id="group_registro">
+                    <label for="input_reg_parto">Número de registro</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">H-</div>
+                        </div>
+                        <input type="number" class="form-control" id="input_ed_reg" placeholder="Número de registro"
+                            oninput="maxLengthCheck(this)" maxlength="3" min="1" max="999">
+                    </div>
+                    <script>
+                        function maxLengthCheck(object) {
+                            if (object.value.length > object.maxLength)
+                                object.value = object.value.slice(0, object.maxLength)
+                        }
+                    </script>
+                </div>
+                <button id="btn_edit_reg" class="btn btn-secondary" style="margin-left:33%">Registrar parto</button>
+            </form>
+        </div>
 
         <script src="../js/historia.js"></script>
 

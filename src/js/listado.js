@@ -30,6 +30,12 @@ for (let i = 0; i < registros.length; i++) {
 
     const tabla_par = tabla_parto(registro.partos);
 
+    let b_madre = ""
+
+    if(registro.madre) {
+        b_madre = `<br><br><b>Madre: &nbsp;</b> ${registro.madre}`
+    }
+
     tr.innerHTML = `                    
     <tr>
         <th scope="row" style="text-align:center;">${i + 1}</th>
@@ -43,6 +49,7 @@ for (let i = 0; i < registros.length; i++) {
                     <b>Partos: </b>
                         ${tabla_par.outerHTML}
                     <b>Estado actual: &nbsp;</b>${registro.muerte === "" ? "Viva" : "Muerta"}
+                        ${b_madre}
                 </p>
             </div>
         </td>

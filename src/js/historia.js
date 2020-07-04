@@ -25,9 +25,16 @@ var hembras_select_historia = new SlimSelect({
 
 $("#btn_historia").click(function () {
     const hem_selected = hembras_select_historia.selected();
+    if (hem_selected.includes("999")) {
+        document.getElementById("edit_num_reg").style.display = "block";
+        document.getElementById('tabla_historia').innerHTML = "";
+        return
+    }
+
+    document.getElementById("edit_num_reg").style.display = "none";
 
     const folder = (hem_selected.slice(0, 5) + "-" + hem_selected.slice(8, (hem_selected.length + 1))).replace(/\s/g, '_')
-    
+
     const ruta = path.join(__dirname, '../data/img_programa/' + folder)
 
     fs.readdir(ruta, (err, files) => {
@@ -60,6 +67,11 @@ $("#btn_historia").click(function () {
                 <th scope="row" style="width:20%;">Partos</th>
                 <td>${tabla_par.outerHTML}</td>`;
 
+        let b_madre = ""
+        if (hem_selec.madre) {
+            b_madre = `<br><br><b>Madre: &nbsp;</b> ${hem_selec.madre}`
+        }
+
         tr_info.innerHTML = `
                 <th scope="row">Información</th>
                 <td>
@@ -72,6 +84,7 @@ $("#btn_historia").click(function () {
                         <br>
                         <br>
                         <b>Vendido: &nbsp;</b>${hem_selec.vendido === "" ? "No" : hem_selec.vendido}
+                        ${b_madre}
                     </p>
                 </td>`;
 
@@ -79,7 +92,7 @@ $("#btn_historia").click(function () {
 
         tr_imagenes.innerHTML = `
                 <th scope="row">Imágenes</th>
-                <td>${imagenes.outerHTML}</td>`;
+                <td><br>${imagenes.outerHTML}</td>`;
 
         // Cada fila de tabla de historia
         tbody.appendChild(tr_partos);
@@ -92,6 +105,42 @@ $("#btn_historia").click(function () {
 
         document.getElementById('tabla_historia').appendChild(table);
     });
+});
+
+const edit_num_reg = document.querySelector('#edit_num_reg');
+edit_num_reg.addEventListener('submit', e => {
+    const hem_selected = hembras_select_historia.selected();
+    const registro = document.querySelector('#input_ed_reg').value;
+
+    const encontrado = registros.find(h => parseInt(h.id.split("-")[1]) === parseInt(registro))
+
+    if (typeof encontrado !== "undefined") {
+        alert("Este numero de registro ya existe")
+    } else {
+        const id = (s = registro, width = 3, char = '0') => {
+            return (s.length >= width) ? s : (new Array(width).join(char) + s).slice(-width);
+        }
+
+        let to_chng = registros.find(h => h.id === hem_selected.slice(0, 5) && h.descripcion === hem_selected.slice(8, (hem_selected.length + 1)));
+
+        let madre = registros.find(h => h.id === to_chng.madre.slice(0, 5)).partos.find(p => p.id === hem_selected.slice(0, 5) && p.fecha === hem_selected.slice(18, (hem_selected.length + 1)))
+
+        to_chng.id = "H-" + id();
+        madre.id = "H-" + id();
+
+        let data_hembras = JSON.stringify(registros);
+
+        fs.writeFileSync(path.join(__dirname, '../data/registros/Hembras.json'), data_hembras)
+
+        let dir_hem = path.join(__dirname, '../data/img_programa/H-' + id() + "-Nacida_el_" + madre.fecha);
+        if (!fs.existsSync(dir_hem)) {
+            fs.mkdirSync(dir_hem);
+        }
+
+    }
+
+    // TODO:
+    e.preventDefault();
 });
 
 function sortId(array, order) {
@@ -161,7 +210,7 @@ function imagenes_hem(imagenes, ruta) {
         const div = document.createElement('div');
         div.style = "margin-left: 10%; margin-right: 10%;"
         imagenes.forEach(img => {
-            div.innerHTML += `<img src="${ruta+"/"+img}" width="100%">`
+            div.innerHTML += `<img src="${ruta + "/" + img}" width="100%">`
             div.innerHTML += `<br>`
             div.innerHTML += `<br>`
             div.innerHTML += `<br>`
