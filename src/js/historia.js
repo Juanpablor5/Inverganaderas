@@ -2,8 +2,19 @@ const fs = require('fs');
 const path = require('path');
 
 let object = [];
-let data = fs.readFileSync(path.join(__dirname, '../data/registros/Hembras.json'));
-let data_temp = JSON.parse(data);
+
+let data = []
+let data_temp
+try {
+    data = fs.readFileSync(path.join(__dirname, '../data/registros/Hembras.json'));
+    data_temp = JSON.parse(data);
+} catch (error) {
+    console.log(error, "Error desconocido, pero hay backup :D");
+    alert("Hubo un error al registrar, utilizando la última copia de seguridad")
+    data = fs.readFileSync(path.join(__dirname, '../data/registros/Hembras-backup.json'));
+    data_temp = JSON.parse(data);
+}
+
 const registros = sortId(data_temp);
 
 object.push({ placeholder: true, text: "Lista de hembras" })
@@ -23,15 +34,23 @@ var hembras_select_historia = new SlimSelect({
     data: object
 });
 
-$("#btn_historia").click(function () {
+let hem_selec = []
+
+$("#hembras_historia").change(function () {
     const hem_selected = hembras_select_historia.selected();
     if (hem_selected.includes("999")) {
         document.getElementById("edit_num_reg").style.display = "block";
         document.getElementById('tabla_historia').innerHTML = "";
+        document.getElementById("table_more_actions").style.display = "none";
         return
     }
 
+    document.getElementById("edit_desc_reg").style.display = "none";
+    document.getElementById("form_reg_muer").style.display = "none";
+    document.getElementById("form_reg_vent").style.display = "none";
+
     document.getElementById("edit_num_reg").style.display = "none";
+    document.getElementById("table_more_actions").style.display = "block";
 
     const folder = (hem_selected.slice(0, 5) + "-" + hem_selected.slice(8, (hem_selected.length + 1))).replace(/\s/g, '_')
 
@@ -51,7 +70,7 @@ $("#btn_historia").click(function () {
             id_hembra = hem_selected.slice(2, 5);
         }
 
-        const hem_selec = registros.find(h => parseInt(h.id.split("-")[1]) === parseInt(id_hembra))
+        hem_selec = registros.find(h => parseInt(h.id.split("-")[1]) === parseInt(id_hembra))
 
         const tabla_par = tabla_parto(hem_selec.partos);
 
@@ -80,7 +99,7 @@ $("#btn_historia").click(function () {
                         <b>Descripción: &nbsp;</b>${hem_selec.descripcion}
                         <br>
                         <br>
-                        <b>Estado actual: &nbsp;</b>${hem_selec.muerte === "" ? "Viva" : "Muerta"}
+                        <b>Estado actual: &nbsp;</b>${hem_selec.muerte === "" ? "Viva" : "Muerta el " + hem_selec.muerte}
                         <br>
                         <br>
                         <b>Vendido: &nbsp;</b>${hem_selec.vendido === "" ? "No" : hem_selec.vendido}
@@ -102,7 +121,6 @@ $("#btn_historia").click(function () {
         table.appendChild(tbody);
 
         document.getElementById('tabla_historia').innerHTML = "";
-
         document.getElementById('tabla_historia').appendChild(table);
     });
 });
@@ -132,15 +150,16 @@ edit_num_reg.addEventListener('submit', e => {
 
         fs.writeFileSync(path.join(__dirname, '../data/registros/Hembras.json'), data_hembras)
 
+        if (registros.length % 5 === 0) {
+            fs.writeFileSync(path.join(__dirname, '../data/registros/Hembras-backup.json'), data_hembras)
+        }
+
         let dir_hem = path.join(__dirname, '../data/img_programa/H-' + id() + "-Nacida_el_" + madre.fecha);
         if (!fs.existsSync(dir_hem)) {
             fs.mkdirSync(dir_hem);
         }
 
     }
-
-    // TODO:
-    e.preventDefault();
 });
 
 function sortId(array, order) {

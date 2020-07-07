@@ -1,8 +1,18 @@
 const fs = require('fs');
 const path = require('path');
 
-let data = fs.readFileSync(path.join(__dirname, '../data/registros/Hembras.json'));
-let data_temp = JSON.parse(data);
+let data = []
+let data_temp
+try {
+    data = fs.readFileSync(path.join(__dirname, '../data/registros/Hembras.json'));
+    data_temp = JSON.parse(data);
+} catch (error) {
+    console.log(error, "Error desconocido, pero hay backup :D");
+    alert("Hubo un error al generar el listado, utilizando la última copia de seguridad")
+    data = fs.readFileSync(path.join(__dirname, '../data/registros/Hembras-backup.json'));
+    data_temp = JSON.parse(data);
+}
+
 
 const registros = sortId(data_temp);
 
@@ -32,7 +42,7 @@ for (let i = 0; i < registros.length; i++) {
 
     let b_madre = ""
 
-    if(registro.madre) {
+    if (registro.madre) {
         b_madre = `<br><br><b>Madre: &nbsp;</b> ${registro.madre}`
     }
 
@@ -48,8 +58,11 @@ for (let i = 0; i < registros.length; i++) {
                     <br>
                     <b>Partos: </b>
                         ${tabla_par.outerHTML}
-                    <b>Estado actual: &nbsp;</b>${registro.muerte === "" ? "Viva" : "Muerta"}
+                    <b>Estado actual: &nbsp;</b>${registro.muerte === "" ? "Viva" : "Muerta el " + registro.muerte}
                         ${b_madre}
+                    <br>
+                    <br>
+                    <b>Vendido: &nbsp;</b>${registro.vendido === "" ? "No" : registro.vendido}
                 </p>
             </div>
         </td>
@@ -130,7 +143,7 @@ function tabla_parto(partos) {
         return table_parto;
     } else {
         let table_parto = document.createElement('p');
-        table_parto.innerHTML=`Sin partos actualmente`;
+        table_parto.innerHTML = `Sin partos actualmente`;
         return table_parto
     }
 }

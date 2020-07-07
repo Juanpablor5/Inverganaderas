@@ -1,8 +1,17 @@
 const fs = require('fs');
 const path = require('path');
 
-let data = fs.readFileSync(path.join(__dirname, '../data/registros/Machos.json'));
-let data_temp = JSON.parse(data);
+let data = []
+let data_temp
+try {
+    data = fs.readFileSync(path.join(__dirname, '../data/registros/Machos.json'));
+    data_temp = JSON.parse(data);
+} catch (error) {
+    console.log(error, "Error desconocido, pero hay backup :D");
+    alert("Hubo un error al generar el listado, utilizando la última copia de seguridad")
+    data = fs.readFileSync(path.join(__dirname, '../data/registros/Machos-backup.json'));
+    data_temp = JSON.parse(data);
+}
 
 const registros = sortId(data_temp)
 
@@ -38,7 +47,7 @@ for (let i = 0; i < registros.length; i++) {
             <div class="content">
                 <p>
                     <br>
-                    <b>Estado actual: &nbsp;</b>${registro.muerte === "" ? "Vivo" : "Muerto"}
+                    <b>Estado actual: &nbsp;</b>${registro.muerte === "" ? "Vivo" : "Muerto el " + registro.muerte}
                     <br>
                     <br>
                     <b>Vendido: &nbsp;</b>${registro.vendido === "" ? "No" : registro.vendido}

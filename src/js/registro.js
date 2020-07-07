@@ -7,8 +7,18 @@ $("#btn_parto").click(function () {
     document.getElementById("form_parto").style.display = "block";
 
     const object = [];
-    let data = fs.readFileSync(path.join(__dirname, '../data/registros/Hembras.json'));
-    let data_temp = JSON.parse(data);
+    let data = []
+    let data_temp
+    try {
+        data = fs.readFileSync(path.join(__dirname, '../data/registros/Hembras.json'));
+        data_temp = JSON.parse(data);
+    } catch (error) {
+        console.log(error, "Error desconocido, pero hay backup :D");
+        alert("Hubo un error al registrar, utilizando la última copia de seguridad")
+        data = fs.readFileSync(path.join(__dirname, '../data/registros/Hembras-backup.json'));
+        data_temp = JSON.parse(data);
+    }
+
     let registros = sortId(data_temp);
 
     object.push({ placeholder: true, text: "Lista de hembras" })
@@ -48,8 +58,17 @@ form_parto.addEventListener('submit', e => {
     } else if (fecha == "") {
         alert('Por favor elija la fecha de parto');
     } else {
-        let data = fs.readFileSync(path.join(__dirname, '../data/registros/Hembras.json'));
-        let hembras = JSON.parse(data);
+        let data = []
+        let hembras
+        try {
+            data = fs.readFileSync(path.join(__dirname, '../data/registros/Hembras.json'));
+            hembras = JSON.parse(data);
+        } catch (error) {
+            console.log(error, "Error desconocido, pero hay backup :D");
+            alert("Hubo un error al registrar, utilizando la última copia de seguridad")
+            data = fs.readFileSync(path.join(__dirname, '../data/registros/Hembras-backup.json'));
+            hembras = JSON.parse(data);
+        }
 
         const encontrado = hembras.find(h => (parseInt(h.id.split("-")[1]) == 999 ? 1000 : parseInt(h.id.split("-")[1])) === parseInt(nuevo_registro.registro))
 
@@ -59,8 +78,18 @@ form_parto.addEventListener('submit', e => {
             hembras.forEach(hembra => {
                 if (hembra.id === nuevo_registro.id_madre) {
                     if (nuevo_registro.genero === "Macho") {
-                        let data = fs.readFileSync(path.join(__dirname, '../data/registros/Machos.json'));
-                        let data_temp = JSON.parse(data);
+                        let data = []
+                        let data_temp
+                        try {
+                            data = fs.readFileSync(path.join(__dirname, '../data/registros/Machos.json'));
+                            data_temp = JSON.parse(data);
+                        } catch (error) {
+                            console.log(error, "Error desconocido, pero hay backup :D");
+                            alert("Hubo un error al registrar, utilizando la última copia de seguridad")
+                            data = fs.readFileSync(path.join(__dirname, '../data/registros/Machos-backup.json'));
+                            data_temp = JSON.parse(data);
+                        }
+
                         const machos = sortId(data_temp);
 
                         const ult_id = machos[machos.length - 1] ? machos[machos.length - 1].id : "M-000";
@@ -83,11 +112,20 @@ form_parto.addEventListener('submit', e => {
                             muerte: "",
                             madre: id_hembra
                         });
-                        let data_machos = JSON.stringify(machos);
-                        let data_hembras = JSON.stringify(hembras);
+                        const data_machos = JSON.stringify(machos);
+                        const data_hembras = JSON.stringify(hembras);
 
                         fs.writeFileSync(path.join(__dirname, '../data/registros/Machos.json'), data_machos)
+
                         fs.writeFileSync(path.join(__dirname, '../data/registros/Hembras.json'), data_hembras)
+
+                        if (machos.length % 5 === 0) {
+                            fs.writeFileSync(path.join(__dirname, '../data/registros/Machos-backup.json'), data_machos)
+                        }
+
+                        if (hembras.length % 5 === 0) {
+                            fs.writeFileSync(path.join(__dirname, '../data/registros/Hembras-backup.json'), data_hembras)
+                        }
 
                         ipcRenderer.send('registro:nuevo', nuevo_registro);
                         return
@@ -109,12 +147,15 @@ form_parto.addEventListener('submit', e => {
                             partos: [],
                             madre: id_hembra
                         });
-                        const hem_temp = hembras;
-                        hembras = sortId(hem_temp);
+                        const hem_temp = sortId(hembras);
 
-                        let data_hembras = JSON.stringify(hembras);
+                        const data_hembras = JSON.stringify(hem_temp);
 
                         fs.writeFileSync(path.join(__dirname, '../data/registros/Hembras.json'), data_hembras)
+
+                        if (hembras.length % 5 === 0) {
+                            fs.writeFileSync(path.join(__dirname, '../data/registros/Hembras-backup.json'), data_hembras)
+                        }
 
                         if (id() != 999) {
                             let dir_hem = path.join(__dirname, '../data/img_programa/H-' + id() + "-Nacida_el_" + fecha());
@@ -147,8 +188,18 @@ form_hembra.addEventListener('submit', e => {
             descripcion: descripcion
         }
 
-        let data = fs.readFileSync(path.join(__dirname, '../data/registros/Hembras.json'));
-        let hembras = JSON.parse(data);
+        let data = []
+        let hembras
+        try {
+            data = fs.readFileSync(path.join(__dirname, '../data/registros/Hembras.json'));
+            hembras = JSON.parse(data);
+        } catch (error) {
+            console.log(error, "Error desconocido, pero hay backup :D");
+            alert("Hubo un error al registrar, utilizando la última copia de seguridad")
+            data = fs.readFileSync(path.join(__dirname, '../data/registros/Hembras-backup.json'));
+            hembras = JSON.parse(data);
+        }
+
         const encontrado = hembras.find(h => parseInt(h.id.split("-")[1]) === parseInt(nuevo_registro.registro))
         if (typeof encontrado !== "undefined") {
             alert("Este numero de registro ya existe");
@@ -166,14 +217,17 @@ form_hembra.addEventListener('submit', e => {
                 partos: []
             });
 
-            const hem_temp = hembras;
-            hembras = sortId(hem_temp);
+            const hem_temp = sortId(hembras);
 
-            let data_hembras = JSON.stringify(hembras);
+            const data_hembras = JSON.stringify(hem_temp);
 
             fs.writeFileSync(path.join(__dirname, '../data/registros/Hembras.json'), data_hembras)
 
-            let dir_hem = path.join(__dirname, '../data/img_programa/H-' + id() + "-" + nuevo_registro.descripcion.replace(/\s/g, '_'));
+            if (hembras.length % 5 === 0) {
+                fs.writeFileSync(path.join(__dirname, '../data/registros/Hembras-backup.json'), data_hembras)
+            }
+
+            const dir_hem = path.join(__dirname, '../data/img_programa/H-' + id() + "-" + nuevo_registro.descripcion.replace(/\s/g, '_'));
             if (!fs.existsSync(dir_hem)) {
                 fs.mkdirSync(dir_hem);
             }

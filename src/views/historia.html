@@ -27,20 +27,14 @@
 
         <div class="container" style="background-color: rgb(255, 255, 255, 0.8); height: auto;">
             <p class="titles" style="text-align: center; color: black;">Historia individual</p>
-            <div class="row" style="margin-left: 20%;">
-                <div class="col-md-8">
-                    <h5 style="color: black; ">Buscar la hembra por el número de registro:</h5>
-                </div>
+            <div class="center" style="width:36%;">
+                <h5 style="color: black; ">Buscar la hembra por el número de registro:</h5>
             </div>
-            <div class="row" style="margin-left: 20%;">
-                <div class="col-md-8">
-                    <select id="hembras_historia" class="font"></select>
-                    <script src="../utils/lib/slimselect.js"></script>
-                </div>
-                <div class="col-md-4">
-                    <button class="btn btn-primary" id="btn_historia">Buscar</button>
-                </div>
+
+            <div class="center" style="width:50%;">
+                <select id="hembras_historia" class="font"></select>
             </div>
+            <script src="../utils/lib/slimselect.js"></script>
             <div style="height: 15px;"></div>
         </div>
 
@@ -70,7 +64,150 @@
             </form>
         </div>
 
+        <div id="edit_desc_reg" class="form-parto" style="width:30%; margin-left: auto; margin-right: auto;">
+            <form style="color: black;">
+                <div class="form-group" id="group_registro">
+                    <label for="input_reg_parto">Nueva descripción</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="input_edit_desc"
+                            placeholder="Nueva descripción de la hembra">
+                    </div>
+                </div>
+                <div class="center" style="width:175px;">
+                    <button class="btn btn-secondary">Cambiar descripción</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="form_reg_muer" class="form-parto" style="width:30%; margin-left: auto; margin-right: auto;">
+            <form style="color: black;">
+                <div class="form-group">
+                    <label for="fecha_muerte">Fecha de muerte</label>
+                    <input class="form-control" type="date" value="dd/mm/aaaa" id="fecha_muerte">
+                </div>
+                <div class="center" style="width:148px;">
+                    <button class="btn btn-secondary">Registrar muerte</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="form_reg_vent" class="form-parto" style="width:30%; margin-left: auto; margin-right: auto;">
+            <form style="color: black;">
+                <div class="form-group">
+                    <label for="fecha_venta">Fecha de venta</label>
+                    <input class="form-control" type="date" value="dd/mm/aaaa" id="fecha_venta">
+                </div>
+                <label for="input_valor">Valor (sin puntos ni comas)</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">$</div>
+                    </div>
+                    <input type="text" class="form-control" id="input_valor" placeholder="Valor" min="1"
+                        pattern="^\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency">
+                </div>
+                <script>
+                    $("input[data-type='currency']").on({
+                        keyup: function () {
+                            formatCurrency($(this));
+                        },
+                        blur: function () {
+                            formatCurrency($(this), "blur");
+                        }
+                    });
+
+                    function formatNumber(n) {
+                        return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                    }
+
+                    function formatCurrency(input, blur) {
+                        var input_val = input.val();
+                        if (input_val === "") { return; }
+                        var original_len = input_val.length;
+                        var caret_pos = input.prop("selectionStart");
+                        if (input_val.indexOf(".") >= 0) {
+                            var decimal_pos = input_val.indexOf(".");
+                            var left_side = input_val.substring(0, decimal_pos);
+                            var right_side = input_val.substring(decimal_pos);
+                            left_side = formatNumber(left_side);
+                            right_side = formatNumber(right_side);
+                            if (blur === "blur") {
+                                right_side += "00";
+                            }
+                            right_side = right_side.substring(0, 2);
+                        } else {
+                            input_val = formatNumber(input_val);
+                            if (blur === "blur") {
+                                input_val += ".00";
+                            }
+                        }
+
+                        input.val(input_val);
+
+                        var updated_len = input_val.length;
+                        caret_pos = updated_len - original_len + caret_pos;
+                        input[0].setSelectionRange(caret_pos, caret_pos);
+                    }
+                </script>
+                <div class="center" style="width:148px;">
+                    <button class="btn btn-secondary">Registrar venta</button>
+                </div>
+            </form>
+        </div>
+
+        <div style="display: none;" id="table_more_actions">
+            <table class="table table-hover table-light"
+                style="width: 80%; margin-left: auto; margin-right: auto; border-style: outset; background: rgba(255, 255, 255, 0.8);">
+                <tbody>
+                    <tr>
+                        <th scope="row" style="width:20%;">Más acciones</th>
+                        <td>
+                            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                                <div class="btn-group mr-4" role="group" aria-label="First group">
+                                    <button type="button" id="btn_edit_desc" class="btn btn-primary"><svg width="1em"
+                                            height="1em" viewBox="0 0 16 16" class="bi bi-pencil-square"
+                                            fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                            <path fill-rule="evenodd"
+                                                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                                        </svg> Editar descripción</button>
+                                </div>
+                                <div class="btn-group mr-4" role="group" aria-label="Second group">
+                                    <button type="button" id="btn_reg_muer" class="btn btn-secondary"><svg width="1em"
+                                            height="1em" viewBox="0 0 16 16" class="bi bi-exclamation-triangle-fill"
+                                            fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 5zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+                                        </svg> Registrar muerte</button>
+                                </div>
+                                <div class="btn-group mr-4" role="group" aria-label="Second group">
+                                    <button type="button" id="btn_reg_ven" class="btn btn-success"><svg width="1em"
+                                            height="1em" viewBox="0 0 16 16" class="bi bi-cash-stack"
+                                            fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M14 3H1a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1h-1z" />
+                                            <path fill-rule="evenodd"
+                                                d="M15 5H1v8h14V5zM1 4a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1H1z" />
+                                            <path
+                                                d="M13 5a2 2 0 0 0 2 2V5h-2zM3 5a2 2 0 0 1-2 2V5h2zm10 8a2 2 0 0 1 2-2v2h-2zM3 13a2 2 0 0 0-2-2v2h2zm7-4a2 2 0 1 1-4 0 2 2 0 0 1 4 0z" />
+                                        </svg> Registrar venta</button>
+                                </div>
+                                <div class="btn-group mr-4" role="group" aria-label="Second group">
+                                    <button type="button" id="btn_eliminar" class="btn btn-danger"><svg width="1em"
+                                            height="1em" viewBox="0 0 16 16" class="bi bi-trash-fill"
+                                            fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z" />
+                                        </svg> Eliminar registro</button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
         <script src="../js/historia.js"></script>
+        <script src="../js/acciones.js"></script>
 
         <!-- Insert this line above script imports  -->
         <script>if (typeof module === 'object') {
