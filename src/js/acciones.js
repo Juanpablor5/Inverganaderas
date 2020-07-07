@@ -105,7 +105,17 @@ $("#btn_eliminar").click(function () {
         const index = registros.indexOf(hem_selec);
         if (index > -1) {
             registros.splice(index, 1);
-        }   
+        }
+
+        let ruta_img_act = path.join(__dirname, '../data/img_programa/' + hem_selec.id + "-" + hem_selec.descripcion.replace(/\s/g, '_'))
+
+        let ruta_img_nuev = path.join(__dirname, '../data/img_programa/' + "deleted-" + hem_selec.id + "-" + hem_selec.descripcion.replace(/\s/g, '_'))
+
+        try {
+            fs.renameSync(ruta_img_act, ruta_img_nuev)
+        } catch (err) {
+            console.log(err, "Error en la parte de eliminar ")
+        }
 
         let data_hembras = JSON.stringify(registros);
     

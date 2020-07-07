@@ -38,8 +38,7 @@ function crearRegistro() {
         title: 'Crear registro',
         icon: path.join(__dirname, 'assets/img/icon.ico')
     });
-    // TODO:
-    // nuevoRegistro.setMenu(null);
+    nuevoRegistro.setMenu(null);
 
     nuevoRegistro.loadURL(url.format({
         pathname: path.join(__dirname, 'views/registro.html'),
@@ -103,16 +102,16 @@ const templateMenu = [
                     }));
                 }
             },
-            {
-                label: 'Ventas realizadas',
-                click() {
-                    mainWindow.loadURL(url.format({
-                        pathname: path.join(__dirname, 'views/ventas.html'),
-                        protocol: 'file',
-                        slashes: true
-                    }));
-                }
-            },
+            // {
+            //     label: 'Ventas realizadas',
+            //     click() {
+            //         mainWindow.loadURL(url.format({
+            //             pathname: path.join(__dirname, 'views/ventas.html'),
+            //             protocol: 'file',
+            //             slashes: true
+            //         }));
+            //     }
+            // },
             {
                 label: 'Machos registrados',
                 click() {
