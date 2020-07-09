@@ -27,14 +27,34 @@
 
         <div class="container" style="background-color: rgb(255, 255, 255, 0.8); height: auto;">
             <p class="titles" style="text-align: center; color: black;">Historia individual</p>
-            <div class="center" style="width:36%;">
-                <h5 style="color: black; ">Buscar la hembra por el número de registro:</h5>
+            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" style="width: 316px; margin-left: auto; margin-right: auto;" id="botones_select">
+                <div class="btn-group mr-4" role="group" aria-label="First group">
+                    <button type="button" id="btn_buscar_hembra" class="btn btn-primary">Buscar hembra</button>
+                </div>
+                <div class="btn-group mr-4" role="group" aria-label="Second group">
+                    <button type="button" id="btn_buscar_macho" class="btn btn-primary">Buscar macho</button>
+                </div>
             </div>
-
-            <div class="center" style="width:50%;">
-                <select id="hembras_historia" class="font"></select>
+            <div id="buscar_hembra" style="display: none;">
+                <div class="center" style="width:36%;">
+                    <h5 style="color: black; ">Buscar la hembra por el número de registro:</h5>
+                </div>
+    
+                <div class="center" style="width:50%;">
+                    <select id="hembras_historia" class="font"></select>
+                </div>
+                <script src="../utils/lib/slimselect.js"></script>
             </div>
-            <script src="../utils/lib/slimselect.js"></script>
+            <div id="buscar_macho" style="display: none;">
+                <div class="center" style="width:36%;">
+                    <h5 style="color: black; ">Buscar el macho por el número de registro:</h5>
+                </div>
+    
+                <div class="center" style="width:50%;">
+                    <select id="machos_historia" class="font"></select>
+                </div>
+                <script src="../utils/lib/slimselect.js"></script>
+            </div>
             <div style="height: 15px;"></div>
         </div>
 
@@ -206,8 +226,9 @@
             </table>
         </div>
 
-        <script src="../js/historia.js"></script>
         <script src="../js/acciones.js"></script>
+        <script src="../js/historia.js"></script>
+        <script src="../js/historia_macho.js"></script>
 
         <!-- Insert this line above script imports  -->
         <script>if (typeof module === 'object') {

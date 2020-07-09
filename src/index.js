@@ -38,7 +38,7 @@ function crearRegistro() {
         title: 'Crear registro',
         icon: path.join(__dirname, 'assets/img/icon.ico')
     });
-    nuevoRegistro.setMenu(null);
+    // nuevoRegistro.setMenu(null);
 
     nuevoRegistro.loadURL(url.format({
         pathname: path.join(__dirname, 'views/registro.html'),

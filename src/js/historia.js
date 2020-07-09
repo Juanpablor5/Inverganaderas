@@ -1,165 +1,171 @@
-const fs = require('fs');
-const path = require('path');
+let hem_selec = []
 
-let object = [];
+let object_hembras = [];
 
-let data = []
-let data_temp
+let data_hembras = []
+let data_temp_hembras
 try {
-    data = fs.readFileSync(path.join(__dirname, '../data/registros/Hembras.json'));
-    data_temp = JSON.parse(data);
+    data_hembras = fs.readFileSync(path.join(__dirname, '../data/registros/Hembras.json'));
+    data_temp_hembras = JSON.parse(data_hembras);
 } catch (error) {
     console.log(error, "Error desconocido, pero hay backup :D");
     alert("Hubo un error al registrar, utilizando la última copia de seguridad")
-    data = fs.readFileSync(path.join(__dirname, '../data/registros/Hembras-backup.json'));
-    data_temp = JSON.parse(data);
+    data_hembras = fs.readFileSync(path.join(__dirname, '../data/registros/Hembras-backup.json'));
+    data_temp_hembras = JSON.parse(data_hembras);
 }
 
-const registros = sortId(data_temp);
+const registros_hembras = sortId(data_temp_hembras);
 
-object.push({ placeholder: true, text: "Lista de hembras" })
-for (let i = 0; i < registros.length; i++) {
-    const hembra = registros[i];
-    object.push({ text: hembra.id + " - " + hembra.descripcion })
+object_hembras.push({ placeholder: true, text: "Lista de hembras" })
+for (let i = 0; i < registros_hembras.length; i++) {
+    const hembra = registros_hembras[i];
+    object_hembras.push({ text: hembra.id + " - " + hembra.descripcion })
 }
 
 var hembras_select_historia = new SlimSelect({
     select: "#hembras_historia",
-    placeholder: "Lista de hembras",
     searchPlaceholder: "Buscar hembra por registro",
     showSearch: true, // shows search field,
     searchingText: "Buscando...",
-    searchText: "No se encontró el congresista buscado",
+    searchText: "No se encontró la hembra buscada",
     closeOnSelect: true,
-    data: object
+    data: object_hembras
 });
 
-let hem_selec = []
+$("#btn_buscar_hembra").click(function () {
+    document.getElementById("buscar_hembra").style.display = "block";
+    document.getElementById("botones_select").style.display = "none";
 
-$("#hembras_historia").change(function () {
-    const hem_selected = hembras_select_historia.selected();
-    if (hem_selected.includes("999")) {
-        document.getElementById("edit_num_reg").style.display = "block";
-        document.getElementById('tabla_historia').innerHTML = "";
-        document.getElementById("table_more_actions").style.display = "none";
-        return
-    }
-
-    document.getElementById("edit_desc_reg").style.display = "none";
-    document.getElementById("form_reg_muer").style.display = "none";
-    document.getElementById("form_reg_vent").style.display = "none";
-
-    document.getElementById("edit_num_reg").style.display = "none";
-    document.getElementById("table_more_actions").style.display = "block";
-
-    const folder = (hem_selected.slice(0, 5) + "-" + hem_selected.slice(8, (hem_selected.length + 1))).replace(/\s/g, '_')
-
-    const ruta = path.join(__dirname, '../data/img_programa/' + folder)
-
-    fs.readdir(ruta, (err, files) => {
-
-        let table = document.createElement('table');
-        table.className = "table table-hover table-light";
-        table.style = "width:80%; margin-left: auto; margin-right: auto; border-style: outset; background: rgba(255,255,255,0.8);";
-
-        let id_hembra
-        if (hem_selected === "Lista de hembras") {
-            alert("Seleccione una hembra para buscar")
+    $("#hembras_historia").change(function () {
+        const hem_selected = hembras_select_historia.selected();
+        if (hem_selected.includes("999")) {
+            document.getElementById("edit_num_reg").style.display = "block";
+            document.getElementById('tabla_historia').innerHTML = "";
+            document.getElementById("table_more_actions").style.display = "none";
             return
-        } else {
-            id_hembra = hem_selected.slice(2, 5);
         }
 
-        hem_selec = registros.find(h => parseInt(h.id.split("-")[1]) === parseInt(id_hembra))
+        document.getElementById("edit_desc_reg").style.display = "none";
+        document.getElementById("form_reg_muer").style.display = "none";
+        document.getElementById("form_reg_vent").style.display = "none";
 
-        const tabla_par = tabla_parto(hem_selec.partos);
+        document.getElementById("edit_num_reg").style.display = "none";
+        document.getElementById("table_more_actions").style.display = "block";
 
-        let tbody = document.createElement("tbody");
+        const folder = (hem_selected.slice(0, 5) + "-" + hem_selected.slice(8, (hem_selected.length + 1))).replace(/\s/g, '_')
 
-        // Table row de la historia
-        let tr_partos = document.createElement("tr");
-        let tr_info = document.createElement("tr");
-        let tr_imagenes = document.createElement("tr");
+        const ruta = path.join(__dirname, '../data/img_programa/' + folder)
 
-        // Table header
-        tr_partos.innerHTML = `
-                <th scope="row" style="width:20%;">Partos</th>
-                <td>${tabla_par.outerHTML}</td>`;
+        fs.readdir(ruta, (err, files) => {
 
-        let b_madre = ""
-        if (hem_selec.madre) {
-            b_madre = `<br><br><b>Madre: &nbsp;</b> ${hem_selec.madre}`
-        }
+            let table = document.createElement('table');
+            table.className = "table table-hover table-light";
+            table.style = "width:80%; margin-left: auto; margin-right: auto; border-style: outset; background: rgba(255,255,255,0.8);";
 
-        tr_info.innerHTML = `
-                <th scope="row">Información</th>
-                <td>
-                    <p>
-                        <br>
-                        <b>Descripción: &nbsp;</b>${hem_selec.descripcion}
-                        <br>
-                        <br>
-                        <b>Estado actual: &nbsp;</b>${hem_selec.muerte === "" ? "Viva" : "Muerta el " + hem_selec.muerte}
-                        <br>
-                        <br>
-                        <b>Vendido: &nbsp;</b>${hem_selec.vendido === "" ? "No" : hem_selec.vendido}
-                        ${b_madre}
-                    </p>
-                </td>`;
+            let id_hembra
+            if (hem_selected === "Lista de hembras") {
+                alert("Seleccione una hembra para buscar")
+                return
+            } else {
+                id_hembra = hem_selected.slice(2, 5);
+            }
 
-        const imagenes = imagenes_hem(files, ruta);
+            hem_selec = registros_hembras.find(h => parseInt(h.id.split("-")[1]) === parseInt(id_hembra))
 
-        tr_imagenes.innerHTML = `
-                <th scope="row">Imágenes</th>
-                <td><br>${imagenes.outerHTML}</td>`;
+            const tabla_par = tabla_parto(hem_selec.partos);
 
-        // Cada fila de tabla de historia
-        tbody.appendChild(tr_partos);
-        tbody.appendChild(tr_info);
-        tbody.appendChild(tr_imagenes);
+            let tbody = document.createElement("tbody");
 
-        table.appendChild(tbody);
+            // Table row de la historia
+            let tr_partos = document.createElement("tr");
+            let tr_info = document.createElement("tr");
+            let tr_imagenes = document.createElement("tr");
 
-        document.getElementById('tabla_historia').innerHTML = "";
-        document.getElementById('tabla_historia').appendChild(table);
+            // Table header
+            tr_partos.innerHTML = `
+                    <th scope="row" style="width:20%;">Partos</th>
+                    <td>${tabla_par.outerHTML}</td>`;
+
+            let b_madre = ""
+            if (hem_selec.madre) {
+                b_madre = `<b>Madre: &nbsp;</b> ${hem_selec.madre}
+                            <br><br><b>Fecha de nacimiento: &nbsp;</b> ${hem_selec.nacimiento}`
+            }
+
+            tr_info.innerHTML = `
+                    <th scope="row">Información</th>
+                    <td>
+                        <p>
+                            ${b_madre}
+                            <br>
+                            <br>
+                            <b>Descripción: &nbsp;</b>${hem_selec.descripcion}
+                            <br>
+                            <br>
+                            <b>Estado actual: &nbsp;</b>${hem_selec.muerte === "" ? "Viva" : "Muerta el " + hem_selec.muerte}
+                            <br>
+                            <br>
+                            <b>Vendido: &nbsp;</b>${hem_selec.vendido === "" ? "No" : hem_selec.vendido}
+                        </p>
+                    </td>`;
+
+            const imagenes = imagenes_hem(files, ruta);
+
+            tr_imagenes.innerHTML = `
+                    <th scope="row">Imágenes</th>
+                    <td><br>${imagenes.outerHTML}</td>`;
+
+            // Cada fila de tabla de historia
+            tbody.appendChild(tr_partos);
+            tbody.appendChild(tr_info);
+            tbody.appendChild(tr_imagenes);
+
+            table.appendChild(tbody);
+
+            document.getElementById('tabla_historia').innerHTML = "";
+            document.getElementById('tabla_historia').appendChild(table);
+
+            //Acciones de la hembra seleccionada
+            accionesHembra();
+        });
     });
-});
 
-const edit_num_reg = document.querySelector('#edit_num_reg');
-edit_num_reg.addEventListener('submit', e => {
-    const hem_selected = hembras_select_historia.selected();
-    const registro = document.querySelector('#input_ed_reg').value;
+    const edit_num_reg = document.querySelector('#edit_num_reg');
+    edit_num_reg.addEventListener('submit', e => {
+        const hem_selected = hembras_select_historia.selected();
+        const registro = document.querySelector('#input_ed_reg').value;
 
-    const encontrado = registros.find(h => parseInt(h.id.split("-")[1]) === parseInt(registro))
+        const encontrado = registros_hembras.find(h => parseInt(h.id.split("-")[1]) === parseInt(registro))
 
-    if (typeof encontrado !== "undefined") {
-        alert("Este numero de registro ya existe")
-    } else {
-        const id = (s = registro, width = 3, char = '0') => {
-            return (s.length >= width) ? s : (new Array(width).join(char) + s).slice(-width);
+        if (typeof encontrado !== "undefined") {
+            alert("Este numero de registro ya existe")
+        } else {
+            const id = (s = registro, width = 3, char = '0') => {
+                return (s.length >= width) ? s : (new Array(width).join(char) + s).slice(-width);
+            }
+
+            let to_chng = registros_hembras.find(h => h.id === hem_selected.slice(0, 5) && h.descripcion === hem_selected.slice(8, (hem_selected.length + 1)));
+
+            let madre = registros_hembras.find(h => h.id === to_chng.madre.slice(0, 5)).partos.find(p => p.id === hem_selected.slice(0, 5) && p.fecha === hem_selected.slice(18, (hem_selected.length + 1)))
+
+            to_chng.id = "H-" + id();
+            madre.id = "H-" + id();
+
+            let data_hembras = JSON.stringify(registros_hembras);
+
+            fs.writeFileSync(path.join(__dirname, '../data/registros/Hembras.json'), data_hembras)
+
+            if (registros_hembras.length % 5 === 0) {
+                fs.writeFileSync(path.join(__dirname, '../data/registros/Hembras-backup.json'), data_hembras)
+            }
+
+            let dir_hem = path.join(__dirname, '../data/img_programa/H-' + id() + "-Nacida_el_" + madre.fecha);
+            if (!fs.existsSync(dir_hem)) {
+                fs.mkdirSync(dir_hem);
+            }
+
         }
-
-        let to_chng = registros.find(h => h.id === hem_selected.slice(0, 5) && h.descripcion === hem_selected.slice(8, (hem_selected.length + 1)));
-
-        let madre = registros.find(h => h.id === to_chng.madre.slice(0, 5)).partos.find(p => p.id === hem_selected.slice(0, 5) && p.fecha === hem_selected.slice(18, (hem_selected.length + 1)))
-
-        to_chng.id = "H-" + id();
-        madre.id = "H-" + id();
-
-        let data_hembras = JSON.stringify(registros);
-
-        fs.writeFileSync(path.join(__dirname, '../data/registros/Hembras.json'), data_hembras)
-
-        if (registros.length % 5 === 0) {
-            fs.writeFileSync(path.join(__dirname, '../data/registros/Hembras-backup.json'), data_hembras)
-        }
-
-        let dir_hem = path.join(__dirname, '../data/img_programa/H-' + id() + "-Nacida_el_" + madre.fecha);
-        if (!fs.existsSync(dir_hem)) {
-            fs.mkdirSync(dir_hem);
-        }
-
-    }
+    });
 });
 
 function sortId(array, order) {

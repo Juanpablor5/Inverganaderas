@@ -108,6 +108,7 @@ form_parto.addEventListener('submit', e => {
                         machos.push({
                             id: "M-" + id(),
                             descripcion: "Nacido el " + fecha(),
+                            nacimiento: fecha(),
                             vendido: "",
                             muerte: "",
                             madre: id_hembra
@@ -142,6 +143,7 @@ form_parto.addEventListener('submit', e => {
                         hembras.push({
                             id: "H-" + id(),
                             descripcion: "Nacida el " + fecha(),
+                            nacimiento: fecha(),
                             vendido: "",
                             muerte: "",
                             partos: [],

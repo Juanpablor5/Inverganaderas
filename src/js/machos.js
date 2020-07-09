@@ -54,7 +54,10 @@ for (let i = 0; i < registros.length; i++) {
                     <br>
                     <br>
                     <b>No. registro de madre: &nbsp;</b>${registro.madre}
-                </p>
+                    <br>
+                    <br>
+                    <b>Fecha de nacimiento: &nbsp;</b> ${registro.nacimiento}
+                    </p>
             </div>
         </td>
     </tr>`;

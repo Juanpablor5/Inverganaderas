@@ -43,7 +43,8 @@ for (let i = 0; i < registros.length; i++) {
     let b_madre = ""
 
     if (registro.madre) {
-        b_madre = `<br><br><b>Madre: &nbsp;</b> ${registro.madre}`
+        b_madre = `<br><br><b>Madre: &nbsp;</b> ${registro.madre}
+                   <br><br><b>Fecha de nacimiento: &nbsp;</b> ${registro.nacimiento}`
     }
 
     tr.innerHTML = `                    
